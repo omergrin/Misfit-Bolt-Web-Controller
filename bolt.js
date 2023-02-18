@@ -9,13 +9,23 @@ writeChar=function(cn, buffer){
 function handleError(errStr){
 	var errorH2 = document.getElementById('error');
 	console.log("Error: " + errStr);
-	errorH2.hidden = false;
-	errorH2.innerText = errStr;
+	if(errorH2){
+		errorH2.hidden = false;
+		errorH2.innerText = errStr;
+	}
+	
+	var loader = document.getElementById('loader');
+	
+	if (loader) {
+		loader.hidden = true;
+	}
 }
 
 function clearError(){
 	var errorH2 = document.getElementById('error');
-	errorH2.hidden = true;
+	if(errorH2){
+		errorH2.hidden = true;
+	}
 }
 
 function onDisconnect(){
