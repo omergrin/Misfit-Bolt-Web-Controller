@@ -1,0 +1,97 @@
+#loader {
+	border: 16px solid #A3DEC9;
+	border-radius: 50%;
+	border-top: 16px solid #499491;
+	width: 150px;
+	height: 150px;
+	-JS-animation: spin 1s linear infinite; 
+	animation: spin 1s linear infinite;
+}
+@-JS-keyframes spin {
+	0% { -JS-transform: rotate(0deg); }
+	100% { -JS-transform: rotate(360deg); }
+}
+
+@keyframes spin {
+	0% { transform: rotate(0deg); }
+	100% { transform: rotate(360deg); }
+}
+
+#error{
+	width: object-fit;
+}
+
+.container {
+  display: flex;
+  justify-content: center;
+}
+.center {
+  width: 15em;
+  padding: 10px;
+  color: #fff;
+  font-weight: bold;
+  font-family: Tahoma;
+}
+
+.toggle, .toggle:before, .slot__label, .curtain {
+	transition-property: background-color, transform, visibility;
+	transition-duration: 0.25s;
+	transition-timing-function: ease-in, cubic-bezier(0.6,0.2,0.4,1.5), linear;
+	background-image: linear-gradient(to left, #fb4040, #e83635, #d52c2a, #c32120, #b11616);
+}
+.toggle:before, .slot, .slot__label {
+	display: block;
+}
+.toggle:before, .curtain {
+	position: absolute;
+}
+.toggle:checked, .curtain {
+	background-image: linear-gradient(to right top, #051937, #004d7a, #008793, #00bf72, #a8eb12);
+}
+.toggle:focus {
+	outline: transparent;
+}
+.toggle {
+	border-radius: 0.75em;
+	box-shadow: 0 0 0 0.1em inset;
+	cursor: pointer;
+	position: relative;
+	margin-right: 0.25em;
+	width: 17em;
+	height: 5em;
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	appearance: none;
+	-webkit-tap-highlight-color: transparent;
+}
+.toggle:before {
+	background: currentColor;
+	border-radius: 50%;
+	content: "";
+	top: 0.3em;
+	left: 0.5em;
+	width: 4.4em;
+	height: 4.4em;
+}
+.toggle:checked:before {
+	transform: translateX(11.5em);
+}
+.toggle:checked ~ .slot .slot__label, .slot__label:nth-child(2) {
+	transform: translateY(-50%) scaleY(0);
+}
+.toggle:checked ~ .slot .slot__label:nth-child(2) {
+	transform: translateY(-100%) scaleY(1);
+}
+.toggle:checked ~ .curtain {
+	transform: scaleX(1);
+}
+
+.curtain {
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	transform: scaleX(0);
+	transform-origin: 0 50%;
+	z-index: -1;
+}

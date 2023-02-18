@@ -1,0 +1,29 @@
+<head>
+	  <title>Bolt</title>
+</head>
+<body>
+	<link rel="stylesheet" href="bolt.css">
+	<script type="text/javascript" src="bundle.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/a-color-picker@1.1.8/dist/acolorpicker.js"></script>
+
+	<div class="container">
+		<div class="center">
+			<input id="toggle" class="toggle" type="checkbox" role="switch" name="toggle" value="on">
+			<div class="curtain"></div>
+			<br><br>
+			<div hidden id="loader" > </div>
+			<br>
+			<div class="picker"
+				 acp-show-rgb="yes"
+				 acp-show-hsl="no"
+				 acp-show-hex="yes"
+				acp-color="#c26161"
+				acp-palette="PALETTE_MATERIAL_CHROME"
+				acp-palette-editable></div> 
+			<h2 hidden id = "error" ></h2>
+		</div>
+	</div>
+
+	
+	<script type="text/javascript"> init_picker(); </script>
+</body>
