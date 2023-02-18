@@ -29,7 +29,7 @@ function clearError(){
 }
 
 function onDisconnect(){
-	console.log("Dis!@#!@");
+	console.log("Disconnected");
 	document.getElementById("toggle").checked = false;
 }
 
