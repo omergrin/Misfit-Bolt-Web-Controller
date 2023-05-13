@@ -1,6 +1,8 @@
 (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
 devChar = null;
 dev = null;
+colorPicker = null;
+
 writeChar=function(cn, buffer){
 	const encoder = new TextEncoder('utf-8');
 	const userDescription = encoder.encode(buffer.padEnd(18));
@@ -20,6 +22,9 @@ function handleError(errStr){
 	if (loader) {
 		loader.hidden = true;
 	}
+	document.getElementById("toggle").checked = false;
+	document.getElementById("button-connect").textContent = "Connect";
+	document.getElementById("button-connect").style.backgroundImage = "linear-gradient(to bottom right, #fcd34d, #ef4444, #ec4899)";
 }
 
 function clearError(){
@@ -30,8 +35,10 @@ function clearError(){
 }
 
 function onDisconnect(){
-	console.log("Dis!@#!@");
+	console.log("Disconnected");
 	document.getElementById("toggle").checked = false;
+	document.getElementById("button-connect").textContent = "Connect";
+	document.getElementById("button-connect").style.backgroundImage = "linear-gradient(to bottom right, #fcd34d, #ef4444, #ec4899)";
 }
 
 window.connect = function(){
@@ -83,6 +90,8 @@ window.connect = function(){
 		  characteristic.properties.writableAuxiliaries);
 		devChar  = characteristic ;
 		document.getElementById("toggle").checked = true;
+		document.getElementById("button-connect").textContent = "Disconnect";
+		document.getElementById("button-connect").style.backgroundImage = "linear-gradient(to right top, #051937, #004d7a, #008793, #00bf72, #a8eb12)";
 		clearError();
 	  })
   .catch(error => {
@@ -92,31 +101,61 @@ window.connect = function(){
 
 window.init_picker = function(){
 	var changeColorLock = false;
+	document.getElementById("button-connect").checked = false;
 	
-	document.getElementById("toggle").addEventListener("change",function() {
-		if(this.checked == true){
-			// Hold the toggle until device is connected
-			this.checked = false;
+	document.getElementById("button-connect").addEventListener("click",function() {
+		if(this.checked == false){
+			// Connect
+			this.checked = true;
 			clearError();
 			connect();
 		}
 		else{
-			// Disconnect from device
+			// Disconnect
+			this.checked = false;
 			dev.gatt.disconnect();
 		}
 	});
 	
+	document.getElementById("toggle").addEventListener("change",function() {
+		if (devChar == null || !dev.gatt.connected){
+			console.log("No device connected");
+			changeColorLock = false;
+		}
+		else {
+			changeColorLock = true;
+			if(this.checked == true){
+				// Turn on
+				var col = colorPicker.rgb.join(",");
+				var lum = col.split(',')
+				document.getElementById("curtain").style.backgroundImage = "linear-gradient(to right top, #BDBDBD, rgb("+col+"))";
+				writeChar("0000fff1-0000-1000-8000-00805f9b34fb", col+",100").then(_ => {
+					changeColorLock = false;
+				});
+			}
+			else{
+				// Turn off
+				writeChar("0000fff1-0000-1000-8000-00805f9b34fb", ",,,0").then(_ => {
+					changeColorLock = false;
+				});
+			}
+
+		}
+	});
+	
 	const AColorPicker = require('a-color-picker');
-	 AColorPicker.from('.picker')
-	.on('change', (picker, color) => {
+	console.log(AColorPicker);
+	
+	var picker = AColorPicker.from('.picker')
+	colorPicker = picker[0];
+	picker.on('change', (picker, color) => {
 		// If no set color action is active
 		if(!changeColorLock){
 			changeColorLock = true;
 			var col = color.substring(4,).slice(0, -1).replaceAll(' ', '');
-			var lum = col.split(',')
-			// Determine the luminance, https://stackoverflow.com/questions/596216/formula-to-determine-perceived-brightness-of-rgb-color
-			lum = Math.round((Number(lum[0])*0.2126 + Number(lum[1])*0.7152 + Number(lum[2])*0.0722)/255*100);
-			console.log("Setting the color to: " + color + ", luminance: " + lum);
+			document.getElementById("curtain").style.backgroundImage = "linear-gradient(to right top, #BDBDBD, rgb("+col+"))";
+
+			console.log("Setting the color to: " + color);
 			if (devChar == null || !dev.gatt.connected){
 				console.log("No device connected");
 				changeColorLock = false;
@@ -124,6 +163,7 @@ window.init_picker = function(){
 			else {
 				writeChar("0000fff1-0000-1000-8000-00805f9b34fb", col+",100").then(_ => {
 					changeColorLock = false;
+					this.checked = false;
 				});
 			}
 		}
