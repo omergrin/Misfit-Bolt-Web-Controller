@@ -9,17 +9,19 @@
 	<div class="container">
 		<div class="center">
 			<input id="toggle" class="toggle" type="checkbox" role="switch" name="toggle" value="on">
-			<div class="curtain"></div>
+			<div id="curtain" class="curtain"></div>
 			<br><br>
 			<div hidden id="loader" > </div>
 			<br>
 			<div class="picker"
-				 acp-show-rgb="yes"
+				 acp-show-rgb="no"
 				 acp-show-hsl="no"
-				 acp-show-hex="yes"
+				 acp-show-hex="no"
 				acp-color="#c26161"
 				acp-palette="PALETTE_MATERIAL_CHROME"
 				acp-palette-editable></div> 
+			<br>
+			<button id="button-connect" class="button-connect" role="button">Connect</button>
 			<h2 hidden id = "error" ></h2>
 		</div>
 	</div>
